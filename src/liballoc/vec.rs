@@ -92,7 +92,7 @@ use crate::raw_vec::RawVec;
 /// vec[0] = 7;
 /// assert_eq!(vec[0], 7);
 ///
-/// vec.extend([1, 2, 3].iter().cloned());
+/// vec.extend([1, 2, 3].iter().copied());
 ///
 /// for x in &vec {
 ///     println!("{}", x);
@@ -628,6 +628,8 @@ impl<T> Vec<T> {
     ///
     /// The capacity will remain at least as large as both the length
     /// and the supplied value.
+    ///
+    /// # Panics
     ///
     /// Panics if the current capacity is smaller than the supplied
     /// minimum capacity.
@@ -1333,10 +1335,9 @@ impl<T> Vec<T> {
 
     /// Splits the collection into two at the given index.
     ///
-    /// Returns a newly allocated `Self`. `self` contains elements `[0, at)`,
-    /// and the returned `Self` contains elements `[at, len)`.
-    ///
-    /// Note that the capacity of `self` does not change.
+    /// Returns a newly allocated vector containing the elements in the range
+    /// `[at, len)`. After the call, the original vector will be left containing
+    /// the elements `[0, at)` with its previous capacity unchanged.
     ///
     /// # Panics
     ///
@@ -2702,6 +2703,9 @@ impl<T> ExactSizeIterator for Drain<'_, T> {
     }
 }
 
+#[unstable(feature = "trusted_len", issue = "37572")]
+unsafe impl<T> TrustedLen for Drain<'_, T> {}
+
 #[stable(feature = "fused", since = "1.26.0")]
 impl<T> FusedIterator for Drain<'_, T> {}
 
@@ -2838,7 +2842,7 @@ pub struct DrainFilter<'a, T, F>
     old_len: usize,
     /// The filter test predicate.
     pred: F,
-    /// A flag that indicates a panic has occured in the filter test prodicate.
+    /// A flag that indicates a panic has occurred in the filter test prodicate.
     /// This is used as a hint in the drop implmentation to prevent consumption
     /// of the remainder of the `DrainFilter`. Any unprocessed items will be
     /// backshifted in the `vec`, but no further items will be dropped or
