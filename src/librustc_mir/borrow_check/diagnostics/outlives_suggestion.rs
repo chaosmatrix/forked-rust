@@ -4,8 +4,8 @@
 use std::collections::BTreeMap;
 
 use log::debug;
-use rustc::{hir::def_id::DefId, infer::InferCtxt, ty::RegionVid};
 use rustc::mir::{Body, Local};
+use rustc::{hir::def_id::DefId, infer::InferCtxt, ty::RegionVid};
 use rustc_data_structures::fx::FxHashSet;
 use rustc_errors::{Diagnostic, DiagnosticBuilder};
 use rustc_index::vec::IndexVec;
@@ -16,7 +16,7 @@ use smallvec::SmallVec;
 use crate::borrow_check::region_infer::RegionInferenceContext;
 
 use super::{
-    RegionName, RegionNameSource, ErrorConstraintInfo, ErrorReportingCtx, RegionErrorNamingCtx,
+    ErrorConstraintInfo, ErrorReportingCtx, RegionErrorNamingCtx, RegionName, RegionNameSource,
 };
 
 /// The different things we could suggest.
@@ -51,10 +51,7 @@ pub struct OutlivesSuggestionBuilder<'a> {
 
 impl OutlivesSuggestionBuilder<'a> {
     /// Create a new builder for the given MIR node representing a fn definition.
-    crate fn new(
-        mir_def_id: DefId,
-        local_names: &'a IndexVec<Local, Option<Symbol>>,
-    ) -> Self {
+    crate fn new(mir_def_id: DefId, local_names: &'a IndexVec<Local, Option<Symbol>>) -> Self {
         OutlivesSuggestionBuilder {
             mir_def_id,
             local_names,
@@ -160,11 +157,7 @@ impl OutlivesSuggestionBuilder<'a> {
             // 3) Suggest unifying 'a with 'b if we have both 'a: 'b and 'b: 'a
 
             if outlived.iter().any(|(_, outlived_name)| {
-                if let RegionNameSource::Static = outlived_name.source {
-                    true
-                } else {
-                    false
-                }
+                if let RegionNameSource::Static = outlived_name.source { true } else { false }
             }) {
                 suggested.push(SuggestedConstraint::Static(fr_name));
             } else {
@@ -250,7 +243,9 @@ impl OutlivesSuggestionBuilder<'a> {
 
         // If there is only one constraint to suggest, then we already suggested it in the
         // intermediate suggestion above.
-        if self.constraints_to_add.len() == 1 {
+        if self.constraints_to_add.len() == 1
+            && self.constraints_to_add.values().next().unwrap().len() == 1
+        {
             debug!("Only 1 suggestion. Skipping.");
             return;
         }

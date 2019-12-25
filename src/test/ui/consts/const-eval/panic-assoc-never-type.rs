@@ -1,6 +1,9 @@
+// build-fail
+
 // Regression test for #66975
 #![warn(const_err)]
 #![feature(const_panic)]
+#![feature(never_type)]
 
 struct PrintName;
 

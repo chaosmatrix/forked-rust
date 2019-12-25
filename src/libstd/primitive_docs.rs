@@ -56,7 +56,7 @@
 /// assert_eq!(false as i32, 0);
 /// ```
 #[stable(feature = "rust1", since = "1.0.0")]
-mod prim_bool { }
+mod prim_bool {}
 
 #[doc(primitive = "never")]
 #[doc(alias = "!")]
@@ -71,6 +71,7 @@ mod prim_bool { }
 /// write:
 ///
 /// ```
+/// #![feature(never_type)]
 /// # fn foo() -> u32 {
 /// let x: ! = {
 ///     return 123
@@ -200,6 +201,7 @@ mod prim_bool { }
 /// for example:
 ///
 /// ```
+/// #![feature(never_type)]
 /// # use std::fmt;
 /// # trait Debug {
 /// # fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result;
@@ -237,8 +239,8 @@ mod prim_bool { }
 /// [`Default`]: default/trait.Default.html
 /// [`default()`]: default/trait.Default.html#tymethod.default
 ///
-#[stable(feature = "never_type", since = "1.41.0")]
-mod prim_never { }
+#[unstable(feature = "never_type", issue = "35121")]
+mod prim_never {}
 
 #[doc(primitive = "char")]
 //
@@ -314,7 +316,7 @@ mod prim_never { }
 /// assert_eq!(32, std::mem::size_of_val(&v[..]));
 /// ```
 #[stable(feature = "rust1", since = "1.0.0")]
-mod prim_char { }
+mod prim_char {}
 
 #[doc(primitive = "unit")]
 //
@@ -352,7 +354,7 @@ mod prim_char { }
 /// ```
 ///
 #[stable(feature = "rust1", since = "1.0.0")]
-mod prim_unit { }
+mod prim_unit {}
 
 #[doc(primitive = "pointer")]
 //
@@ -445,7 +447,7 @@ mod prim_unit { }
 /// [`drop`]: ../std/mem/fn.drop.html
 /// [`write`]: ../std/ptr/fn.write.html
 #[stable(feature = "rust1", since = "1.0.0")]
-mod prim_pointer { }
+mod prim_pointer {}
 
 #[doc(primitive = "array")]
 //
@@ -556,7 +558,7 @@ mod prim_pointer { }
 /// [`IntoIterator`]: iter/trait.IntoIterator.html
 ///
 #[stable(feature = "rust1", since = "1.0.0")]
-mod prim_array { }
+mod prim_array {}
 
 #[doc(primitive = "slice")]
 #[doc(alias = "[")]
@@ -591,7 +593,7 @@ mod prim_array { }
 /// assert_eq!(x, &[1, 7, 3]);
 /// ```
 #[stable(feature = "rust1", since = "1.0.0")]
-mod prim_slice { }
+mod prim_slice {}
 
 #[doc(primitive = "str")]
 //
@@ -656,7 +658,7 @@ mod prim_slice { }
 /// used to get a string slice under normal circumstances. Use `as_str`
 /// instead.
 #[stable(feature = "rust1", since = "1.0.0")]
-mod prim_str { }
+mod prim_str {}
 
 #[doc(primitive = "tuple")]
 #[doc(alias = "(")]
@@ -764,7 +766,7 @@ mod prim_str { }
 /// ```
 ///
 #[stable(feature = "rust1", since = "1.0.0")]
-mod prim_tuple { }
+mod prim_tuple {}
 
 #[doc(primitive = "f32")]
 /// The 32-bit floating point type.
@@ -772,7 +774,7 @@ mod prim_tuple { }
 /// *[See also the `std::f32` module](f32/index.html).*
 ///
 #[stable(feature = "rust1", since = "1.0.0")]
-mod prim_f32 { }
+mod prim_f32 {}
 
 #[doc(primitive = "f64")]
 //
@@ -781,7 +783,7 @@ mod prim_f32 { }
 /// *[See also the `std::f64` module](f64/index.html).*
 ///
 #[stable(feature = "rust1", since = "1.0.0")]
-mod prim_f64 { }
+mod prim_f64 {}
 
 #[doc(primitive = "i8")]
 //
@@ -789,7 +791,7 @@ mod prim_f64 { }
 ///
 /// *[See also the `std::i8` module](i8/index.html).*
 #[stable(feature = "rust1", since = "1.0.0")]
-mod prim_i8 { }
+mod prim_i8 {}
 
 #[doc(primitive = "i16")]
 //
@@ -797,7 +799,7 @@ mod prim_i8 { }
 ///
 /// *[See also the `std::i16` module](i16/index.html).*
 #[stable(feature = "rust1", since = "1.0.0")]
-mod prim_i16 { }
+mod prim_i16 {}
 
 #[doc(primitive = "i32")]
 //
@@ -805,7 +807,7 @@ mod prim_i16 { }
 ///
 /// *[See also the `std::i32` module](i32/index.html).*
 #[stable(feature = "rust1", since = "1.0.0")]
-mod prim_i32 { }
+mod prim_i32 {}
 
 #[doc(primitive = "i64")]
 //
@@ -813,15 +815,15 @@ mod prim_i32 { }
 ///
 /// *[See also the `std::i64` module](i64/index.html).*
 #[stable(feature = "rust1", since = "1.0.0")]
-mod prim_i64 { }
+mod prim_i64 {}
 
 #[doc(primitive = "i128")]
 //
 /// The 128-bit signed integer type.
 ///
 /// *[See also the `std::i128` module](i128/index.html).*
-#[stable(feature = "i128", since="1.26.0")]
-mod prim_i128 { }
+#[stable(feature = "i128", since = "1.26.0")]
+mod prim_i128 {}
 
 #[doc(primitive = "u8")]
 //
@@ -829,7 +831,7 @@ mod prim_i128 { }
 ///
 /// *[See also the `std::u8` module](u8/index.html).*
 #[stable(feature = "rust1", since = "1.0.0")]
-mod prim_u8 { }
+mod prim_u8 {}
 
 #[doc(primitive = "u16")]
 //
@@ -837,7 +839,7 @@ mod prim_u8 { }
 ///
 /// *[See also the `std::u16` module](u16/index.html).*
 #[stable(feature = "rust1", since = "1.0.0")]
-mod prim_u16 { }
+mod prim_u16 {}
 
 #[doc(primitive = "u32")]
 //
@@ -845,7 +847,7 @@ mod prim_u16 { }
 ///
 /// *[See also the `std::u32` module](u32/index.html).*
 #[stable(feature = "rust1", since = "1.0.0")]
-mod prim_u32 { }
+mod prim_u32 {}
 
 #[doc(primitive = "u64")]
 //
@@ -853,15 +855,15 @@ mod prim_u32 { }
 ///
 /// *[See also the `std::u64` module](u64/index.html).*
 #[stable(feature = "rust1", since = "1.0.0")]
-mod prim_u64 { }
+mod prim_u64 {}
 
 #[doc(primitive = "u128")]
 //
 /// The 128-bit unsigned integer type.
 ///
 /// *[See also the `std::u128` module](u128/index.html).*
-#[stable(feature = "i128", since="1.26.0")]
-mod prim_u128 { }
+#[stable(feature = "i128", since = "1.26.0")]
+mod prim_u128 {}
 
 #[doc(primitive = "isize")]
 //
@@ -873,7 +875,7 @@ mod prim_u128 { }
 /// location in memory. For example, on a 32 bit target, this is 4 bytes
 /// and on a 64 bit target, this is 8 bytes.
 #[stable(feature = "rust1", since = "1.0.0")]
-mod prim_isize { }
+mod prim_isize {}
 
 #[doc(primitive = "usize")]
 //
@@ -885,7 +887,7 @@ mod prim_isize { }
 /// location in memory. For example, on a 32 bit target, this is 4 bytes
 /// and on a 64 bit target, this is 8 bytes.
 #[stable(feature = "rust1", since = "1.0.0")]
-mod prim_usize { }
+mod prim_usize {}
 
 #[doc(primitive = "reference")]
 #[doc(alias = "&")]
@@ -1032,7 +1034,7 @@ mod prim_usize { }
 /// meant for generic contexts, where the final type `T` is a type parameter or otherwise not
 /// locally known.
 #[stable(feature = "rust1", since = "1.0.0")]
-mod prim_ref { }
+mod prim_ref {}
 
 #[doc(primitive = "fn")]
 //
@@ -1134,4 +1136,4 @@ mod prim_ref { }
 ///
 /// [`Copy`]: marker/trait.Copy.html
 #[stable(feature = "rust1", since = "1.0.0")]
-mod prim_fn { }
+mod prim_fn {}

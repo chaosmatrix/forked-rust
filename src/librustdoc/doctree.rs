@@ -9,7 +9,6 @@ use syntax_pos::{self, Span};
 
 use rustc::hir;
 use rustc::hir::def_id::CrateNum;
-use rustc::hir::ptr::P;
 
 pub struct Module<'hir> {
     pub name: Option<Name>,
@@ -45,30 +44,30 @@ impl Module<'hir> {
         vis: &'hir hir::Visibility,
     ) -> Module<'hir> {
         Module {
-            name       : name,
+            name: name,
             id: hir::CRATE_HIR_ID,
             vis,
             where_outer: syntax_pos::DUMMY_SP,
             where_inner: syntax_pos::DUMMY_SP,
             attrs,
             extern_crates: Vec::new(),
-            imports    :   Vec::new(),
-            structs    :   Vec::new(),
-            unions     :   Vec::new(),
-            enums      :   Vec::new(),
-            fns        :   Vec::new(),
-            mods       :   Vec::new(),
-            typedefs   :   Vec::new(),
-            opaque_tys :   Vec::new(),
-            statics    :   Vec::new(),
-            constants  :   Vec::new(),
-            traits     :   Vec::new(),
-            impls      :   Vec::new(),
-            foreigns   :   Vec::new(),
-            macros     :   Vec::new(),
-            proc_macros:   Vec::new(),
+            imports: Vec::new(),
+            structs: Vec::new(),
+            unions: Vec::new(),
+            enums: Vec::new(),
+            fns: Vec::new(),
+            mods: Vec::new(),
+            typedefs: Vec::new(),
+            opaque_tys: Vec::new(),
+            statics: Vec::new(),
+            constants: Vec::new(),
+            traits: Vec::new(),
+            impls: Vec::new(),
+            foreigns: Vec::new(),
+            macros: Vec::new(),
+            proc_macros: Vec::new(),
             trait_aliases: Vec::new(),
-            is_crate   : false,
+            is_crate: false,
         }
     }
 }
@@ -90,7 +89,7 @@ pub struct Struct<'hir> {
     pub name: Name,
     pub generics: &'hir hir::Generics,
     pub attrs: &'hir [ast::Attribute],
-    pub fields: &'hir [hir::StructField],
+    pub fields: &'hir [hir::StructField<'hir>],
     pub whence: Span,
 }
 
@@ -101,7 +100,7 @@ pub struct Union<'hir> {
     pub name: Name,
     pub generics: &'hir hir::Generics,
     pub attrs: &'hir [ast::Attribute],
-    pub fields: &'hir [hir::StructField],
+    pub fields: &'hir [hir::StructField<'hir>],
     pub whence: Span,
 }
 
@@ -119,7 +118,7 @@ pub struct Variant<'hir> {
     pub name: Name,
     pub id: hir::HirId,
     pub attrs: &'hir [ast::Attribute],
-    pub def: &'hir hir::VariantData,
+    pub def: &'hir hir::VariantData<'hir>,
     pub whence: Span,
 }
 
@@ -136,7 +135,7 @@ pub struct Function<'hir> {
 }
 
 pub struct Typedef<'hir> {
-    pub ty: &'hir P<hir::Ty>,
+    pub ty: &'hir hir::Ty,
     pub gen: &'hir hir::Generics,
     pub name: Name,
     pub id: hir::HirId,
@@ -156,7 +155,7 @@ pub struct OpaqueTy<'hir> {
 
 #[derive(Debug)]
 pub struct Static<'hir> {
-    pub type_: &'hir P<hir::Ty>,
+    pub type_: &'hir hir::Ty,
     pub mutability: hir::Mutability,
     pub expr: hir::BodyId,
     pub name: Name,
@@ -167,7 +166,7 @@ pub struct Static<'hir> {
 }
 
 pub struct Constant<'hir> {
-    pub type_: &'hir P<hir::Ty>,
+    pub type_: &'hir hir::Ty,
     pub expr: hir::BodyId,
     pub name: Name,
     pub attrs: &'hir [ast::Attribute],
@@ -180,7 +179,7 @@ pub struct Trait<'hir> {
     pub is_auto: hir::IsAuto,
     pub unsafety: hir::Unsafety,
     pub name: Name,
-    pub items: Vec<&'hir hir::TraitItem>,
+    pub items: Vec<&'hir hir::TraitItem<'hir>>,
     pub generics: &'hir hir::Generics,
     pub bounds: &'hir [hir::GenericBound],
     pub attrs: &'hir [ast::Attribute],
@@ -206,8 +205,8 @@ pub struct Impl<'hir> {
     pub defaultness: hir::Defaultness,
     pub generics: &'hir hir::Generics,
     pub trait_: &'hir Option<hir::TraitRef>,
-    pub for_: &'hir P<hir::Ty>,
-    pub items: Vec<&'hir hir::ImplItem>,
+    pub for_: &'hir hir::Ty,
+    pub items: Vec<&'hir hir::ImplItem<'hir>>,
     pub attrs: &'hir [ast::Attribute],
     pub whence: Span,
     pub vis: &'hir hir::Visibility,
@@ -218,7 +217,7 @@ pub struct ForeignItem<'hir> {
     pub vis: &'hir hir::Visibility,
     pub id: hir::HirId,
     pub name: Name,
-    pub kind: &'hir hir::ForeignItemKind,
+    pub kind: &'hir hir::ForeignItemKind<'hir>,
     pub attrs: &'hir [ast::Attribute],
     pub whence: Span,
 }

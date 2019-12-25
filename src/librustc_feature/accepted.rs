@@ -1,6 +1,6 @@
 //! List of the accepted feature gates.
 
-use super::{State, Feature};
+use super::{Feature, State};
 use syntax_pos::symbol::sym;
 
 macro_rules! declare_features {
@@ -23,6 +23,7 @@ macro_rules! declare_features {
     }
 }
 
+#[rustfmt::skip]
 declare_features! (
     // -------------------------------------------------------------------------
     // feature-group-start: for testing purposes
@@ -253,8 +254,6 @@ declare_features! (
     (accepted, const_constructor, "1.40.0", Some(61456), None),
     /// Allows the use of `#[cfg(doctest)]`, set when rustdoc is collecting doctests.
     (accepted, cfg_doctest, "1.40.0", Some(62210), None),
-    /// Allows the `!` type. Does not imply 'exhaustive_patterns' any more.
-    (accepted, never_type, "1.41.0", Some(35121), None),
     /// Allows relaxing the coherence rules such that
     /// `impl<T> ForeignTrait<LocalType> for ForeignType<T>` is permitted.
     (accepted, re_rebalance_coherence, "1.41.0", Some(55437), None),

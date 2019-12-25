@@ -3,16 +3,15 @@
 use State::*;
 
 use errors::{DiagnosticBuilder, PResult};
-use rustc_data_structures::thin_vec::ThinVec;
 use rustc_parse::parser::Parser;
-use syntax_expand::base::*;
-use syntax_pos::Span;
-use syntax::{span_err, struct_span_err};
 use syntax::ast::{self, AsmDialect};
 use syntax::ptr::P;
 use syntax::symbol::{kw, sym, Symbol};
 use syntax::token::{self, Token};
 use syntax::tokenstream::{self, TokenStream};
+use syntax::{span_err, struct_span_err};
+use syntax_expand::base::*;
+use syntax_pos::Span;
 
 use rustc_error_codes::*;
 
@@ -40,10 +39,11 @@ impl State {
 
 const OPTIONS: &[Symbol] = &[sym::volatile, sym::alignstack, sym::intel];
 
-pub fn expand_asm<'cx>(cx: &'cx mut ExtCtxt<'_>,
-                       sp: Span,
-                       tts: TokenStream)
-                       -> Box<dyn MacResult + 'cx> {
+pub fn expand_asm<'cx>(
+    cx: &'cx mut ExtCtxt<'_>,
+    sp: Span,
+    tts: TokenStream,
+) -> Box<dyn MacResult + 'cx> {
     let mut inline_asm = match parse_inline_asm(cx, sp, tts) {
         Ok(Some(inline_asm)) => inline_asm,
         Ok(None) => return DummyResult::any(sp),
@@ -63,7 +63,7 @@ pub fn expand_asm<'cx>(cx: &'cx mut ExtCtxt<'_>,
         id: ast::DUMMY_NODE_ID,
         kind: ast::ExprKind::InlineAsm(P(inline_asm)),
         span: cx.with_def_site_ctxt(sp),
-        attrs: ThinVec::new(),
+        attrs: ast::AttrVec::new(),
     }))
 }
 
@@ -86,13 +86,12 @@ fn parse_inline_asm<'a>(
 ) -> Result<Option<ast::InlineAsm>, DiagnosticBuilder<'a>> {
     // Split the tts before the first colon, to avoid `asm!("x": y)`  being
     // parsed as `asm!(z)` with `z = "x": y` which is type ascription.
-    let first_colon = tts.trees()
-        .position(|tt| {
-            match tt {
-                tokenstream::TokenTree::Token(Token { kind: token::Colon, .. }) |
-                tokenstream::TokenTree::Token(Token { kind: token::ModSep, .. }) => true,
-                _ => false,
-            }
+    let first_colon = tts
+        .trees()
+        .position(|tt| match tt {
+            tokenstream::TokenTree::Token(Token { kind: token::Colon, .. })
+            | tokenstream::TokenTree::Token(Token { kind: token::ModSep, .. }) => true,
+            _ => false,
         })
         .unwrap_or(tts.len());
     let mut p = cx.new_parser_from_tts(tts.trees().skip(first_colon).collect());
@@ -121,8 +120,7 @@ fn parse_inline_asm<'a>(
                     ));
                 }
                 // Nested parser, stop before the first colon (see above).
-                let mut p2 =
-                    cx.new_parser_from_tts(tts.trees().take(first_colon).collect());
+                let mut p2 = cx.new_parser_from_tts(tts.trees().take(first_colon).collect());
 
                 if p2.token == token::Eof {
                     let mut err =
@@ -173,12 +171,14 @@ fn parse_inline_asm<'a>(
                     let mut ch = constraint_str.chars();
                     let output = match ch.next() {
                         Some('=') => None,
-                        Some('+') => {
-                            Some(Symbol::intern(&format!("={}", ch.as_str())))
-                        }
+                        Some('+') => Some(Symbol::intern(&format!("={}", ch.as_str()))),
                         _ => {
-                            span_err!(cx, span, E0661,
-                                                    "output operand constraint lacks '=' or '+'");
+                            span_err!(
+                                cx,
+                                span,
+                                E0661,
+                                "output operand constraint lacks '=' or '+'"
+                            );
                             None
                         }
                     };
@@ -202,11 +202,9 @@ fn parse_inline_asm<'a>(
                     let constraint = parse_asm_str(&mut p)?;
 
                     if constraint.as_str().starts_with("=") {
-                        span_err!(cx, p.prev_span, E0662,
-                                                "input operand constraint contains '='");
+                        span_err!(cx, p.prev_span, E0662, "input operand constraint contains '='");
                     } else if constraint.as_str().starts_with("+") {
-                        span_err!(cx, p.prev_span, E0663,
-                                                "input operand constraint contains '+'");
+                        span_err!(cx, p.prev_span, E0663, "input operand constraint contains '+'");
                     }
 
                     p.expect(&token::OpenDelim(token::Paren))?;
@@ -227,8 +225,12 @@ fn parse_inline_asm<'a>(
                     if OPTIONS.iter().any(|&opt| s == opt) {
                         cx.span_warn(p.prev_span, "expected a clobber, found an option");
                     } else if s.as_str().starts_with("{") || s.as_str().ends_with("}") {
-                        span_err!(cx, p.prev_span, E0664,
-                                                "clobber should not be surrounded by braces");
+                        span_err!(
+                            cx,
+                            p.prev_span,
+                            E0664,
+                            "clobber should not be surrounded by braces"
+                        );
                     }
 
                     clobs.push(s);
@@ -260,13 +262,11 @@ fn parse_inline_asm<'a>(
             // MOD_SEP is a double colon '::' without space in between.
             // When encountered, the state must be advanced twice.
             match (&p.token.kind, state.next(), state.next().next()) {
-                (&token::Colon, StateNone, _) |
-                (&token::ModSep, _, StateNone) => {
+                (&token::Colon, StateNone, _) | (&token::ModSep, _, StateNone) => {
                     p.bump();
                     break 'statement;
                 }
-                (&token::Colon, st, _) |
-                (&token::ModSep, _, st) => {
+                (&token::Colon, st, _) | (&token::ModSep, _, st) => {
                     p.bump();
                     state = st;
                 }
